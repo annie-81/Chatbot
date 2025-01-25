@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Chatbot</title>
+    <style>
+        #conversation {
+            margin-top: 20px;
+        }
+        .user-message {
+            font-weight: bold;
+        }
+        .bot-response {
+            color: green;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatbot (Ask about Sapthagiri College)</h1>
+    <input type="text" id="userInput" placeholder="Type your question..." />
+    <button id="sendButton" onclick="sendMessage()">Send</button>
+    <div id="conversation"></div>
+
+    <script>
+        function sendMessage() {
+            var input = document.getElementById('userInput').value.trim();
+            if (!input) return;
+            document.getElementById('userInput').value = ''; 
+            document.getElementById('sendButton').disabled = true; 
+
+            var userMessage = document.createElement('p');
+            userMessage.className = 'user-message';
+            userMessage.textContent = "You: " + input;
+            document.getElementById('conversation').appendChild(userMessage);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/chatbot/message', true);
+            xhr.setRequestHeader('Content-Type', 'text/plain');
+            xhr.onload = function() {
+                document.getElementById('sendButton').disabled = false; 
+                if (xhr.status === 200) {
+                    var botResponse = document.createElement('div');
+                    botResponse.className = 'bot-response';
+
+                    var contentType = xhr.getResponseHeader("Content-Type");
+                    if (contentType && contentType.includes("text/html")) {
+                
+                        botResponse.innerHTML = xhr.responseText; 
+                    } else {
+                        botResponse.textContent = "Bot: " + xhr.responseText;
+                    }
+
+                    document.getElementById('conversation').appendChild(botResponse);
+                } else {
+                    alert("Error!");
+                }
+            };
+            xhr.send(input);
+        }
+    </script>
+</body>
+</html>
