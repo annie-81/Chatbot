@@ -30,7 +30,7 @@ For version control and managing the repository.
 
 - To clone this repository to your local machine:
 
-git clone https://github.com/annie-81/College_Chatbot.git
+git clone https://github.com/annie-81/College_Chatbot.git  
 cd College_Chatbot
 
 ## Running the Application
